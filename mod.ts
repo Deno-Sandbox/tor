@@ -5,7 +5,7 @@ export class Tor {
         if(hostname){
             this.hostname = hostname;
         }
-        this.checkProxyIsOnline()
+        //this.checkProxyIsOnline()
     }
 
     public async get(url){
