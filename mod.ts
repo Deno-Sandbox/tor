@@ -5,6 +5,7 @@ export class Tor {
         if(hostname){
             this.hostname = hostname;
         }
+        this.checkProxyIsOnline()
     }
 
     public async get(url){
@@ -21,11 +22,32 @@ export class Tor {
         cmd = cmd.split(' ');
         let p = await Deno.run({
             cmd,
-            stdout: "piped"
+            stdout: "piped",
+            stderr: "piped"
         });
-        let output = await p.output();
-        let decoder = new TextDecoder();
-        let text = decoder.decode(output);
+        
+        // get the p status
+        let status = await p.status();
+        let text
+        if(status.success){
+            text = await p.output();
+        } else {
+            text = await p.stderrOutput();
+        };
+        text = new TextDecoder().decode(text);
         return text;
+    }
+
+    public async checkProxyIsOnline(){
+        console.group("Checking Tor proxy is online...");
+        let cmd = `curl -x socks5h://${this.hostname} http://www.google.com`;
+        let text = await this.executeCurl(cmd);
+        if(!text.includes("Google")){
+            console.log("Tor proxy is not online 🧅");
+            console.log("Please check your proxy settings");
+            Deno.exit(1);
+        } else {
+            console.log("Tor proxy is online 🧞");
+        }
     }
 }
