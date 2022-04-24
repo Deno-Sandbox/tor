@@ -25,6 +25,11 @@ export class Tor {
             stderr: "piped"
         });
         
+        //stop after 60 sec
+        setTimeout(() => {
+            p.close();
+        }, 60000);
+
         // get the p status
         let status = await p.status();
         let text
