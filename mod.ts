@@ -38,16 +38,30 @@ export class Tor {
         return text;
     }
 
-    public async checkProxyIsOnline(){
+    public async checkProxyIsOnline(fatal?, verbose?){
+        if(fatal === undefined){
+            fatal = false;
+        }
+        if(verbose === undefined){
+            verbose = true;
+        }
         console.group("Checking Tor proxy is online...");
         let cmd = `curl -x socks5h://${this.hostname} http://www.google.com`;
         let text = await this.executeCurl(cmd);
         if(!text.includes("Google")){
-            console.log("Tor proxy is not online 🧅");
-            console.log("Please check your proxy settings");
-            Deno.exit(1);
+            if(verbose){
+                console.log("Tor proxy is not online 🧅");
+                console.log("Please check your proxy settings");
+            }
+            if(fatal){
+                Deno.exit(1);
+            }
+            return false
         } else {
-            console.log("Tor proxy is online 🧞");
+            if(verbose){
+                console.log("Tor proxy is online 🧞");
+            }
+            return true
         }
     }
 }
