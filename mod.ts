@@ -5,7 +5,6 @@ export class Tor {
         if(hostname){
             this.hostname = hostname;
         }
-        //this.checkProxyIsOnline()
     }
 
     public async get(url){
@@ -34,7 +33,7 @@ export class Tor {
         } else {
             text = await p.stderrOutput();
         };
-        text = new TextDecoder().decode(text);
+        text = new TextDecoder().decode(text)+"\n";
         return text;
     }
 
@@ -45,7 +44,9 @@ export class Tor {
         if(verbose === undefined){
             verbose = true;
         }
-        console.group("Checking Tor proxy is online...");
+        if(verbose){
+            console.log("Checking Tor proxy is online...");
+        }
         let cmd = `curl -x socks5h://${this.hostname} http://www.google.com`;
         let text = await this.executeCurl(cmd);
         if(!text.includes("Google")){
