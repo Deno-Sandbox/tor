@@ -32,7 +32,9 @@ export class Tor {
                 await Deno.run({
                     cmd: ("kill -9 "+p.pid).split(' ')
                 })
-                p.close();
+                await p.close();
+                //stop the subprocess
+                p = null;
             } catch(err){
                 console.log(err)
             }
