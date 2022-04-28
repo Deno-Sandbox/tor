@@ -39,17 +39,21 @@ export class Tor {
                 console.log(err)
             }
         }, 60000);
-
-        // get the p status
-        let status = await p.status();
         let text
-        if(status.success){
-            text = await p.output();
-        } else {
-            text = await p.stderrOutput();
-        };
-        clearTimeout(i);
-        text = new TextDecoder().decode(text)+"\n";
+        try{
+            // get the p status
+            let status = await p.status();
+            if(status.success){
+                text = await p.output();
+            } else {
+                text = await p.stderrOutput();
+            };
+            clearTimeout(i);
+            text = new TextDecoder().decode(text)+"\n";
+        } catch(err){
+            text = "";
+        }
+        
         return text;
     }
 
