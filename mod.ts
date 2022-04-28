@@ -29,12 +29,15 @@ export class Tor {
         let i = setTimeout(async () => {
             try{
                 console.log('Max time reached, killing process...');
-                await Deno.run({
+                let p2 = await Deno.run({
                     cmd: ("kill -9 "+p.pid).split(' ')
                 })
                 await p.close();
                 //stop the subprocess
                 p = null;
+
+                await p2.close()
+                p2 = null
             } catch(err){
                 console.log(err)
             }
