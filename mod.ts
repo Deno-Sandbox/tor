@@ -32,14 +32,14 @@ export class Tor {
                 let p2 = await Deno.run({
                     cmd: ("kill -9 "+p.pid).split(' ')
                 })
-                await p.close();
-                //stop the subprocess
-                p = null;
-
-                await p2.close()
-                p2 = null
+                let status = await p2.status();
+                if(status.success){
+                    await p2.output();
+                } else {
+                    await p2.stderrOutput();
+                };
             } catch(err){
-                console.log(err)
+                //console.log(err)
             }
         }, 60000);
         let text
@@ -51,7 +51,7 @@ export class Tor {
             } else {
                 text = await p.stderrOutput();
             };
-            clearTimeout(i);
+            //clearTimeout(i);
             text = new TextDecoder().decode(text)+"\n";
         } catch(err){
             text = "";
