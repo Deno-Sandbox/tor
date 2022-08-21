@@ -42,6 +42,7 @@ export class Tor {
                 };
             } catch(err){
                 //console.log(err)
+                p.close();
             }
         }, 60000);
         let text
@@ -58,6 +59,10 @@ export class Tor {
         } catch(err){
             text = "";
         }
+
+        try {
+            p.close();
+        } catch (error) {}
         
         return text;
     }
