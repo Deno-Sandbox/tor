@@ -26,7 +26,7 @@ export class Tor {
         });
         
         //stop after 60 sec
-        let i = setTimeout(async () => {
+        setTimeout(async () => {
             try{
                 //console.log('Max time reached, killing process...');
                 let p2 = await Deno.run({
