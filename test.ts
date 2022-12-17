@@ -1,6 +1,9 @@
 import { Tor } from "./mod.ts";
 const tor = new Tor();
 
+// Start Tor
+await tor.start();
+
 setTimeout(async () => {
     console.log("getting website")
     let torWiki = await tor.get("http://juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion/");

@@ -95,4 +95,38 @@ export class Tor {
             return true
         }
     }
+
+
+    public async start() {
+        // Try to start tor for the different OS
+        if(Deno.build.os === "windows"){
+            this.executeAllways("tor.exe");
+        } else {
+            this.executeAllways("tor");
+        }
+        // wait for tor to start
+        let check = false;
+        let count = 0;
+        while(!check){
+            check = await this.checkProxyIsOnline(false, false);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            count++;
+            if(count > 60){
+                console.log("Tor proxy is not online 🧅");
+                console.log("Please check your proxy settings");
+                Deno.exit(1);
+            }
+        }
+    }
+
+    private async executeAllways(cmd){
+        let p = Deno.run({
+            cmd : cmd.split(' '),
+            stdout: "inherit",
+            stderr: "inherit"
+        });
+        await p.status();
+        p.close();
+        this.executeAllways(cmd);
+    }
 }

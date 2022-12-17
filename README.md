@@ -8,6 +8,12 @@ import { Tor } from "https://deno.land/x/tor/mod.ts"
 const tor = new Tor()
 ```
 
+## Start tor
+```ts
+await tor.start()
+```
+
+
 ## Check the tor socks5 proxy is online
 ```ts
 let check = tor.checkProxyIsOnline()
